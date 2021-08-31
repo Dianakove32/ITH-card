@@ -1,5 +1,8 @@
 import "./App.scss";
 import { v4 as uuidv4 } from "uuid";
+import Header from "./components/Header/Header";
+import { useState } from "react";
+import Card from "./components/Card/Card";
 
 interface CardsDataDTO {
     title: string;
@@ -7,7 +10,7 @@ interface CardsDataDTO {
     id: string;
 }
 
-let data: CardsDataDTO[] = [
+let initialState: CardsDataDTO[] = [
     {
         title: "Spain",
         description:
@@ -29,17 +32,11 @@ let data: CardsDataDTO[] = [
 ];
 
 const App = () => {
+    const [data, setData] = useState(initialState)
     return (
         <div className="App">
-        <h1>itechart-react-course</h1>
-        <div className="cards-container">
-            {data.map((el) => (
-            <div className="card" key={el.id}>
-                <h3>{el.title}</h3>
-                <p>{el.description}</p>
-            </div>
-            ))}
-        </div>
+        <Header/>
+        <Card data={data}/>
         </div>
     );
 };
