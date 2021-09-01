@@ -45,11 +45,17 @@ const App = () => {
         })
     }
 
+    const removeCardHandler = ( id: string) => {
+        let filteredData = data.filter(el=> el.id !== id)
+
+        setData(filteredData)
+    }
+
     return (
         <div className="App">
         <Header/>
         <AddCard onAddCard={addCardHandler}/>
-        <Card data={data}/>
+        <Card data={data} removeCardHandler={removeCardHandler}/>
         </div>
     );
 };
