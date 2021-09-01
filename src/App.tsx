@@ -3,6 +3,7 @@ import { v4 as uuidv4 } from "uuid";
 import Header from "./components/Header/Header";
 import { useState } from "react";
 import Card from "./components/Card/Card";
+import AddCard from "./components/Card/AddCard";
 
 interface CardsDataDTO {
     title: string;
@@ -33,9 +34,21 @@ let initialState: CardsDataDTO[] = [
 
 const App = () => {
     const [data, setData] = useState(initialState)
+
+    const addCardHandler = ( title: string, text: string) => {
+
+        setData((prevData)=>{
+            return [
+                ...prevData,
+                {title:title, description: text, id: uuidv4()}
+            ]
+        })
+    }
+
     return (
         <div className="App">
         <Header/>
+        <AddCard onAddCard={addCardHandler}/>
         <Card data={data}/>
         </div>
     );
