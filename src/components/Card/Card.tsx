@@ -1,23 +1,29 @@
 import './Card.scss'
 
-interface IProps {
+interface IPropsData {
     title: string;
     description: string;
     id: string;
-
 }
 
-const Card = (props: { data: IProps[], removeCardHandler: (id:any) => void; }) => {
-const {data,removeCardHandler} = props
+interface IProps {
+    data: IPropsData[]
+    removeCardHandler: (id: string) => void;
+    editCardHandler: (id: string) => void;
+    isEdit:boolean
+}
+
+const Card = (props: IProps) => {
+const {data,removeCardHandler, editCardHandler,isEdit } = props
 
     return (
         <div className="cards-container">
-        {data.map((el: IProps) => (
+        {data.map((el: IPropsData) => (
             <div className="card" key={el.id}>
-            <span id={el.id} onClick = {()=>removeCardHandler(el.id) }>&#10060;</span>
+            {isEdit ? <span id={el.id} onClick = {()=>removeCardHandler(el.id) }>&#10060;</span> : null}
             <h3>{el.title}</h3>
             <p>{el.description}</p>
-            <button>Edit</button>
+            <button id={el.id} onClick={()=>editCardHandler(el.id)}>Edit</button>
             </div>
         ))}
         </div>
@@ -25,7 +31,5 @@ const {data,removeCardHandler} = props
 };
 
 export default Card;
-function id(id: any): void {
-    throw new Error('Function not implemented.');
-}
+
 

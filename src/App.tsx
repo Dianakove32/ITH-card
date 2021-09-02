@@ -3,12 +3,12 @@ import { v4 as uuidv4 } from "uuid";
 import Header from "./components/Header/Header";
 import { useState } from "react";
 import Card from "./components/Card/Card";
-import AddCard from "./components/Card/AddCard";
+import Modal from "./components/Modal/Modal";
 
 interface CardsDataDTO {
-    title: string;
-    description: string;
-    id: string;
+  title: string;
+  description: string;
+  id: string;
 }
 
 let initialState: CardsDataDTO[] = [
@@ -33,29 +33,50 @@ let initialState: CardsDataDTO[] = [
 ];
 
 const App = () => {
-    const [data, setData] = useState(initialState)
+    const [data, setData] = useState(initialState);
+    const [isEdit, setIsEdit] = useState(false);
+    const [isOpen, setIsOpen] = useState(false);
 
-    const addCardHandler = ( title: string, text: string) => {
+    const addCardHandler = (title: string, text: string) => {
+        setData((prevData) => {
+        return [...prevData, { title: title, description: text, id: uuidv4() }];
+        });
+    };
 
-        setData((prevData)=>{
-            return [
-                ...prevData,
-                {title:title, description: text, id: uuidv4()}
-            ]
-        })
-    }
+    const removeCardHandler = (id: string) => {
+        let filteredData = data.filter((el) => el.id !== id);
 
-    const removeCardHandler = ( id: string) => {
-        let filteredData = data.filter(el=> el.id !== id)
+        setData(filteredData);
+    };
 
-        setData(filteredData)
-    }
+    const editCardHandler = (id: string) => {
+        setIsEdit(true);
+    };
+
+    const openModal = () => {
+        setIsOpen(true);
+    };
+
+    const closeModal = () => {
+        setIsOpen(false);
+    };
 
     return (
         <div className="App">
-        <Header/>
-        <AddCard onAddCard={addCardHandler}/>
-        <Card data={data} removeCardHandler={removeCardHandler}/>
+        <Header />
+        <div className={isOpen ? "backdrop" : ""} onClick={closeModal}></div>
+        <div>
+            <button className="btn-add" onClick={openModal}>
+            Add Card
+            </button>
+        </div>
+        {isOpen ? <Modal addCardHandler={addCardHandler}  closeModal={closeModal}/> : null}
+        <Card
+            data={data}
+            removeCardHandler={removeCardHandler}
+            editCardHandler={editCardHandler}
+            isEdit={isEdit}
+        />
         </div>
     );
 };
