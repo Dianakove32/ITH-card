@@ -35,7 +35,8 @@ const Card = (props: IProps) => {
         item.description = enteredText
     };
 
-    const saveCardHandler = () => {
+    const saveCardHandler = (event: { preventDefault: () => void; }) => {
+        event.preventDefault()
         editCardHandler();
     };
 
