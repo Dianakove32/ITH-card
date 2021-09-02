@@ -49,28 +49,22 @@ const App = () => {
         setData(filteredData);
     };
 
-    const editCardHandler = (id: string) => {
-        setIsEdit(true);
+    const editCardHandler = () => {
+        setIsEdit(!isEdit);
     };
 
-    const openModal = () => {
-        setIsOpen(true);
-    };
-
-    const closeModal = () => {
-        setIsOpen(false);
+    const toggleModal = () => {
+        setIsOpen(!isOpen);
     };
 
     return (
         <div className="App">
         <Header />
-        <div className={isOpen ? "backdrop" : ""} onClick={closeModal}></div>
+        <div className={isOpen ? "backdrop" : ""} onClick={toggleModal}></div>
         <div>
-            <button className="btn-add" onClick={openModal}>
-            Add Card
-            </button>
+            <button className="btn-add" onClick={toggleModal}>Add Card</button>
         </div>
-        {isOpen ? <Modal addCardHandler={addCardHandler}  closeModal={closeModal}/> : null}
+        {isOpen ? <Modal addCardHandler={addCardHandler} closeModal={toggleModal}/> : null}
         <Card
             data={data}
             removeCardHandler={removeCardHandler}

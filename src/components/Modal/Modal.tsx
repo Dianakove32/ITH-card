@@ -38,14 +38,14 @@ const Modal = (props: IPropsModal  ) => {
                 <input
                 id="title"
                 type="text"
-                value={enteredTitle}
+                defaultValue={enteredTitle}
                 onChange={titleChangeHandler}
                 />
                 <label htmlFor="textarea">Text</label>
                 <textarea
                 id="textarea"
                 onChange={textChangeHandler}
-                value={enteredText}
+                defaultValue={enteredText}
                 />
                 <button className="btn-add" type="submit">Add </button>
             </form>
