@@ -6,8 +6,10 @@ import Card from "./components/Card/Card";
 import Modal from "./components/Modal/Modal";
 
 interface CardsDataDTO {
-  title: string;
-  description: string;
+  title?: string;
+  oldTitle?: string;
+  description?: string;
+  oldDescription?: string;
   id: string;
 }
 
@@ -37,6 +39,11 @@ const App = () => {
     const [isEdit, setIsEdit] = useState(false);
     const [isOpen, setIsOpen] = useState(false);
 
+    data.forEach(x=>{
+        x.oldTitle = x.title;
+        x.oldDescription = x.description;
+    })
+
     const addCardHandler = (title: string, text: string) => {
         setData((prevData) => {
         return [...prevData, { title: title, description: text, id: uuidv4() }];
@@ -49,8 +56,10 @@ const App = () => {
         setData(filteredData);
     };
 
-    const editCardHandler = () => {
+    const editCardHandler = ( ) => {
+
         setIsEdit(!isEdit);
+
     };
 
     const toggleModal = () => {

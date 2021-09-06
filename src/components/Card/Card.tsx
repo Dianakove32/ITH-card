@@ -1,50 +1,65 @@
-import { useState } from "react";
 import "./Card.scss";
 
 interface IPropsData {
-  title: string;
-  description: string;
+  title?: string;
+  oldTitle?: string;
+  description?: string;
+  oldDescription?: string;
   id: string;
 }
 
 interface IProps {
-  data: IPropsData[];
+  data: IPropsData [];
   removeCardHandler: (id: string) => void;
   editCardHandler: () => void;
   isEdit: boolean;
 }
 
 const Card = (props: IProps) => {
-    const { data, removeCardHandler, editCardHandler, isEdit } =
-        props;
 
-    const [enteredTitle, setEnteredTitle] = useState("");
-    const [enteredText, setEnteredText] = useState("");
+    const { data, removeCardHandler, editCardHandler, isEdit } = props;
 
     const titleChangeHandler = (event: React.ChangeEvent<HTMLInputElement>) => {
         let item: IPropsData = data.find(el=>el.id===event.target.id)!
 
-        setEnteredTitle(event.target.value);
-        item.title = enteredTitle
+        item.title = event.target.value;
     };
 
     const textChangeHandler = (event: React.ChangeEvent<HTMLTextAreaElement>) => {
         let item: IPropsData = data.find(el=>el.id===event.target.id)!
 
-        setEnteredText(event.target.value);
-        item.description = enteredText
+        item.description = event.target.value
     };
 
     const saveCardHandler = (event: { preventDefault: () => void; }) => {
         event.preventDefault()
+        let arrTitle = data.every(el => el.title !== '')
+        let arrDesc= data.every(el => el.description !== '')
+
+        if (!arrTitle || !arrDesc ){
+            return
+        }
+        data.forEach(x=>{
+            x.oldTitle = x.title;
+            x.oldDescription = x.description;
+        })
         editCardHandler();
+    };
+
+    const closeEditHandler = (event: { preventDefault: () => void; }) => {
+        event.preventDefault();
+        data.forEach(x=>{
+            x.title = x.oldTitle;
+            x.description = x.oldDescription;
+        })
+                editCardHandler();
     };
 
     return (
         <div className="content-container">
         <div >
-            <button className="btn-add" onClick={editCardHandler}>
-            Edit
+            <button className="btn-add" onClick={isEdit ?closeEditHandler  : editCardHandler}>
+            {isEdit ? 'Cancel' : 'Edit'}
             </button>
             {isEdit ? (
             <button className="btn-add" onClick={saveCardHandler}>Save</button> ) : null}
