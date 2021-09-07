@@ -3,12 +3,14 @@ import { v4 as uuidv4 } from "uuid";
 import Header from "./components/Header/Header";
 import { useState } from "react";
 import Card from "./components/Card/Card";
-import AddCard from "./components/Card/AddCard";
+import Modal from "./components/Modal/Modal";
 
 interface CardsDataDTO {
-    title: string;
-    description: string;
-    id: string;
+  title?: string;
+  oldTitle?: string;
+  description?: string;
+  oldDescription?: string;
+  id: string;
 }
 
 let initialState: CardsDataDTO[] = [
@@ -33,23 +35,51 @@ let initialState: CardsDataDTO[] = [
 ];
 
 const App = () => {
-    const [data, setData] = useState(initialState)
+    const [data, setData] = useState(initialState);
+    const [isEdit, setIsEdit] = useState(false);
+    const [isOpen, setIsOpen] = useState(false);
 
-    const addCardHandler = ( title: string, text: string) => {
+    data.forEach(x=>{
+        x.oldTitle = x.title;
+        x.oldDescription = x.description;
+    })
 
-        setData((prevData)=>{
-            return [
-                ...prevData,
-                {title:title, description: text, id: uuidv4()}
-            ]
-        })
-    }
+    const addCardHandler = (title: string, text: string) => {
+        setData((prevData) => {
+        return [...prevData, { title: title, description: text, id: uuidv4() }];
+        });
+    };
+
+    const removeCardHandler = (id: string) => {
+        let filteredData = data.filter((el) => el.id !== id);
+
+        setData(filteredData);
+    };
+
+    const editCardHandler = ( ) => {
+
+        setIsEdit(!isEdit);
+
+    };
+
+    const toggleModal = () => {
+        setIsOpen(!isOpen);
+    };
 
     return (
         <div className="App">
-        <Header/>
-        <AddCard onAddCard={addCardHandler}/>
-        <Card data={data}/>
+        <Header />
+        <div className={isOpen ? "backdrop" : ""} onClick={toggleModal}></div>
+        <div>
+            <button className="btn-add" onClick={toggleModal}>Add Card</button>
+        </div>
+        {isOpen ? <Modal addCardHandler={addCardHandler} closeModal={toggleModal}/> : null}
+        <Card
+            data={data}
+            removeCardHandler={removeCardHandler}
+            editCardHandler={editCardHandler}
+            isEdit={isEdit}
+        />
         </div>
     );
 };
