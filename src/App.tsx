@@ -55,7 +55,7 @@ const App = () => {
         x.oldDescription = x.body;
     })
 
-    const addCardHandler = (title: string, text: string) => {
+    const addCardHandler = async(title: string, text: string) => {
         let newData={
             title: title,
             body: text,
@@ -66,7 +66,7 @@ const App = () => {
         // return [...prevData, newData];
         // });
 
-        fetch('https://jsonplaceholder.typicode.com/posts', {
+        let response = await fetch('https://jsonplaceholder.typicode.com/posts', {
             method: 'POST',
             headers: {
                 'Content-Type': 'application/json'
@@ -74,7 +74,9 @@ const App = () => {
             body: JSON.stringify(newData)
 
         })
-        console.log(newData)
+
+        let result = await response;
+        console.log(result.status );
     };
 
     const removeCardHandler = (id: string) => {
