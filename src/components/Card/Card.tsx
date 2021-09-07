@@ -1,18 +1,18 @@
 import "./Card.scss";
 
 interface IPropsData {
-  title?: string;
-  oldTitle?: string;
-  description?: string;
-  oldDescription?: string;
-  id: string;
+    title?: string;
+    oldTitle?: string;
+    body?: string;
+    oldDescription?: string;
+    id: string;
 }
 
 interface IProps {
-  data: IPropsData [];
-  removeCardHandler: (id: string) => void;
-  editCardHandler: () => void;
-  isEdit: boolean;
+    data: IPropsData [];
+    removeCardHandler: (id: string) => void;
+    editCardHandler: () => void;
+    isEdit: boolean;
 }
 
 const Card = (props: IProps) => {
@@ -28,20 +28,20 @@ const Card = (props: IProps) => {
     const textChangeHandler = (event: React.ChangeEvent<HTMLTextAreaElement>) => {
         let item: IPropsData = data.find(el=>el.id===event.target.id)!
 
-        item.description = event.target.value
+        item.body = event.target.value
     };
 
     const saveCardHandler = (event: { preventDefault: () => void; }) => {
         event.preventDefault()
         let arrTitle = data.every(el => el.title !== '')
-        let arrDesc= data.every(el => el.description !== '')
+        let arrDesc= data.every(el => el.body !== '')
 
         if (!arrTitle || !arrDesc ){
             return
         }
         data.forEach(x=>{
             x.oldTitle = x.title;
-            x.oldDescription = x.description;
+            x.oldDescription = x.body;
         })
         editCardHandler();
     };
@@ -50,7 +50,7 @@ const Card = (props: IProps) => {
         event.preventDefault();
         data.forEach(x=>{
             x.title = x.oldTitle;
-            x.description = x.oldDescription;
+            x.body = x.oldDescription;
         })
                 editCardHandler();
     };
@@ -89,10 +89,10 @@ const Card = (props: IProps) => {
                 <textarea
                     id={el.id}
                     onChange={textChangeHandler}
-                    defaultValue={el.description}
+                    defaultValue={el.body}
                 />
                 </form>
-            ) : ( <div><h3>{el.title}</h3> <p>{el.description}</p></div>)}
+            ) : ( <div><h3>{el.title}</h3> <p>{el.body}</p></div>)}
             </div>
         ))}
         </div>
