@@ -5,12 +5,12 @@ interface IPropsData {
     oldTitle?: string;
     body?: string;
     oldDescription?: string;
-    id: string;
+    id: string ;
 }
 
 interface IProps {
     data: IPropsData [];
-    removeCardHandler: (id: string) => void;
+    removeCardHandler: (id: string ) => void;
     editCardHandler: () => void;
     isEdit: boolean;
 }
@@ -65,7 +65,7 @@ const Card = (props: IProps) => {
             <button className="btn-add" onClick={saveCardHandler}>Save</button> ) : null}
         </div>
         <div className="cards-container">
-         {data.map((el: IPropsData) => (
+        {data.map((el: IPropsData) => (
             <div className="card" key={el.id}>
             {isEdit ? (
                 <span

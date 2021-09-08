@@ -12,7 +12,7 @@ interface CardsDataDTO {
     oldTitle?: string;
     body: string;
     oldDescription?: string;
-    id: string;
+    id: string ;
 }
 
 // let initialState: CardsDataDTO[] = [
@@ -52,7 +52,12 @@ const Cards = () => {
     async function getData(){
         setIsLoading(true);
         const data: any = await axios.get(url)
-        setData(data.data)
+        let newData= data.data.map((el:CardsDataDTO) =>{
+            return {title: el.title,
+                    body: el.body,
+                    id: String(el.id),}
+        })
+        setData(newData)
         setIsLoading(false);
     }
 
@@ -69,9 +74,9 @@ const Cards = () => {
             id: uuidv4()
         }
 
-        // setData((prevData) => {
-        // return [...prevData, newData];
-        // });
+        setData((prevData) => {
+        return [newData, ...prevData ];
+        });
 
         axios.post(url, {
             method: 'POST',
