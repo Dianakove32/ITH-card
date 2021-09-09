@@ -67,6 +67,7 @@ const Card = (props: IProps) => {
         <div className="cards-container">
         {data.map((el: IPropsData) => (
             <div className="card" key={el.id}>
+
             {isEdit ? (
                 <span
                 id={el.id}

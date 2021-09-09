@@ -1,10 +1,11 @@
 import "./Cards.scss";
 import { v4 as uuidv4 } from "uuid";
 import Header from "../Header/Header";
-import { useEffect, useState } from "react";
+import { useEffect, useState  } from "react";
 import Card from "./Card";
 import Modal from "../Modal/Modal";
 import axios from 'axios'
+import Navigation from '../Navigation/Navigation';
 import { Link } from "react-router-dom";
 
 interface CardsDataDTO {
@@ -15,27 +16,6 @@ interface CardsDataDTO {
     id: string ;
 }
 
-// let initialState: CardsDataDTO[] = [
-//     {
-//         title: "Spain",
-//         body:
-//         "Is a country in Southwestern Europe with some pockets of territory in the Mediterranean Sea, offshore in the Atlantic Ocean and across the Strait of Gibraltar.",
-//         id: uuidv4(),
-//     },
-//     {
-//         title: "Egypt",
-//         body:
-//         "Officially the Arab Republic of Egypt, is a transcontinental country spanning the northeast corner of Africa and southwest corner of Asia by a land bridge formed by the Sinai Peninsula.",
-//         id: uuidv4(),
-//     },
-//     {
-//         title: "France",
-//         body:
-//         "Is a transcontinental country spanning Western Europe and several overseas regions and territories.",
-//         id: uuidv4(),
-//     },
-// ];
-
 let url = 'https://jsonplaceholder.typicode.com/posts'
 
 const Cards = () => {
@@ -44,14 +24,14 @@ const Cards = () => {
     const [isOpen, setIsOpen] = useState(false);
     const [isLoading, setIsLoading] = useState(false);
 
+
     useEffect(() => {
         getData()
     }, [])
 
-
     async function getData(){
         setIsLoading(true);
-        const data: any = await axios.get(url)
+        const data = await axios.get(url)
         let newData= data.data.map((el:CardsDataDTO) =>{
             return {title: el.title,
                     body: el.body,
@@ -60,7 +40,6 @@ const Cards = () => {
         setData(newData)
         setIsLoading(false);
     }
-
 
     data.forEach(x=>{
         x.oldTitle = x.title;
@@ -96,7 +75,6 @@ const Cards = () => {
     const editCardHandler = ( ) => {
 
         setIsEdit(!isEdit);
-
     };
 
     const toggleModal = () => {
@@ -105,9 +83,8 @@ const Cards = () => {
 
     return (
         <div className="App">
-            <div className="nav-cards">
-                <Link className="cards-link" to='/main'>MainPage</Link>
-            </div>
+        <Link className="cards-link" to='/main'>MainPage</Link>
+        <Navigation/>
         <Header />
         <div className={isOpen ? "backdrop" : ""} onClick={toggleModal}></div>
         <div>
@@ -120,6 +97,7 @@ const Cards = () => {
             editCardHandler={editCardHandler}
             isEdit={isEdit}
         />}
+
         </div>
     );
 };
