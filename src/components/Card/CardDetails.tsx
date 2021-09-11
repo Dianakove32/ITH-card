@@ -1,13 +1,15 @@
-import { useRef, useState, MutableRefObject, useEffect } from "react";
-import {  Link, useHistory } from "react-router-dom";
+import { connect } from "react-redux";
+import { useRef, useState, MutableRefObject, useEffect,  } from "react";
+import { Link, useParams } from "react-router-dom";
 import Navigation from "../Navigation/Navigation";
+import { createData } from "../../states/redux/actions";
 
-export default function CardDetails()  {
-    const history: any  = useHistory();
+function CardDetails(props: any)  {
+    const params: any  = useParams();
     const cardRef  = useRef() as MutableRefObject<HTMLDivElement> ;
     const [isEdit, setIsEdit] = useState(false);
 
-    const data = history.location.state.cardOne;
+    const data = props.syncData.find((el: { id: string; })=> el.id === params.id)
     data.oldTitle = data.title;
     data.oldDescription = data.body;
 
@@ -40,7 +42,6 @@ useEffect(()=>{
         if (!arrTitle || !arrDesc ){
             return
         }
-
         data.oldTitle = data.title;
         data.oldDescription = data.body;
 
@@ -70,7 +71,7 @@ useEffect(()=>{
             {isEdit ? (
             <button className="btn-add" onClick={saveCardHandler}>Save</button> ) : null}
             <div className="cardContainer">
-                <div className="card" ref={cardRef}>
+                <div className="card"  id={data.id} ref={cardRef}>
             {isEdit ? (
                 <span
                 id={data.id}
@@ -107,3 +108,14 @@ useEffect(()=>{
         </div>
     );
 }
+const mapDispatchToProps=  {
+    createData,
+}
+
+const mapStateToProps = (state: any) => {
+    return {
+    syncData: state.data.data,
+}
+}
+
+export default connect(mapStateToProps, mapDispatchToProps) (CardDetails);

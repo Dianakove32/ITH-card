@@ -1,58 +1,61 @@
+import { connect, useDispatch, useSelector } from "react-redux";
+import { showIsEdit, hideEdit, createData } from "../../states/redux/actions";
+import { CardsDataDTO } from "../../TStypes";
 import "./Card.scss";
 
-interface IPropsData {
-    title?: string;
-    oldTitle?: string;
-    body?: string;
-    oldDescription?: string;
-    id: string ;
-}
+const Card = (props: any) => {
 
-interface IProps {
-    data: IPropsData [];
-    removeCardHandler: (id: string ) => void;
-    editCardHandler: () => void;
-    isEdit: boolean;
-}
+    const dispatch = useDispatch()
+    const loading: any = useSelector(state=>state )
+    let isEdit = loading.data.isEdit
 
-const Card = (props: IProps) => {
+    const editCardHandler = () => {
+        dispatch(showIsEdit())
+        //dispatch({type: 'EDIT'})
+    };
 
-    const { data, removeCardHandler, editCardHandler, isEdit } = props;
+    const removeCardHandler = (id: string) => {
+        let filteredData = props.syncData.filter((el: CardsDataDTO) => el.id !== id);
+        props.createData(filteredData)
+       // dispatch({type: 'ADD_DATA', data: filteredData})
+    };
 
     const titleChangeHandler = (event: React.ChangeEvent<HTMLInputElement>) => {
-        let item: IPropsData = data.find(el=>el.id===event.target.id)!
+        let item: CardsDataDTO = props.syncData.find((el: { id: string; })=>el.id===event.target.id)!
 
         item.title = event.target.value;
     };
 
     const textChangeHandler = (event: React.ChangeEvent<HTMLTextAreaElement>) => {
-        let item: IPropsData = data.find(el=>el.id===event.target.id)!
+        let item: CardsDataDTO = props.syncData.find((el: { id: string; })=>el.id===event.target.id)!
 
         item.body = event.target.value
     };
 
     const saveCardHandler = (event: { preventDefault: () => void; }) => {
         event.preventDefault()
-        let arrTitle = data.every(el => el.title !== '')
-        let arrDesc= data.every(el => el.body !== '')
+        let arrTitle = props.syncData.every((el: { title: string; }) => el.title !== '')
+        let arrDesc= props.syncData.every((el: { body: string; }) => el.body !== '')
 
         if (!arrTitle || !arrDesc ){
             return
         }
-        data.forEach(x=>{
+        props.syncData.forEach((x: CardsDataDTO)=>{
             x.oldTitle = x.title;
             x.oldDescription = x.body;
         })
-        editCardHandler();
+        dispatch(hideEdit())
+        //editCardHandler();
     };
 
     const closeEditHandler = (event: { preventDefault: () => void; }) => {
         event.preventDefault();
-        data.forEach(x=>{
+        props.syncData.forEach((x: CardsDataDTO)=>{
             x.title = x.oldTitle;
             x.body = x.oldDescription;
         })
-                editCardHandler();
+        dispatch(hideEdit())
+                //editCardHandler();
     };
 
     return (
@@ -65,7 +68,7 @@ const Card = (props: IProps) => {
             <button className="btn-add" onClick={saveCardHandler}>Save</button> ) : null}
         </div>
         <div className="cards-container">
-        {data.map((el: IPropsData) => (
+        {props.syncData.map((el: CardsDataDTO) => (
             <div className="card" key={el.id}>
 
             {isEdit ? (
@@ -101,4 +104,14 @@ const Card = (props: IProps) => {
     );
 };
 
-export default Card;
+const mapStateToProps = (state: any) => {
+    return {
+        syncData: state.data.data,
+    }
+}
+
+const mapDispatchToProps=  {
+    createData,
+}
+
+export default connect(mapStateToProps, mapDispatchToProps)(Card);

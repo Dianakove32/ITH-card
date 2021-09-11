@@ -1,0 +1,7 @@
+export const CREATE_DATA = 'DATA/CREATE_DATA'
+export const SHOW_IS_EDIT = 'SHOW_IS_EDIT'
+export const HIDE_IS_EDIT = 'HIDE_IS_EDIT'
+export const SHOW_LOAD = 'SHOW_LOAD'
+export const HIDE_LOAD = 'HIDE_LOAD'
+export const SHOW_OPEN = 'SHOW_OPEN'
+export const HIDE_OPEN = 'HIDE_OPEN'
