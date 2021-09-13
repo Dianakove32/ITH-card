@@ -1,4 +1,3 @@
-/* eslint-disable react-hooks/exhaustive-deps */
 import "./Cards.scss";
 import { v4 as uuidv4 } from "uuid";
 import Header from "../Header/Header";
@@ -9,7 +8,6 @@ import Navigation from '../Navigation/Navigation';
 import { Link } from "react-router-dom";
 import {connect, useDispatch, useSelector} from 'react-redux'
 import { createData, toggleIsLoad, toggleIsOpen } from "../../states/redux/actions";
-import {initialData} from '../dataData'
 import { CardsDataDTO } from "../../TStypes";
 
 const Cards = (props: any) => {
@@ -17,19 +15,20 @@ const Cards = (props: any) => {
     const loading: any = useSelector(state=>state )
     let isLoad = loading.data.isLoad
     let isOpen = loading.data.isOpen
+    let data = loading.data.data
 
 const getData = useCallback(()=>{
         dispatchRedux(toggleIsLoad())
 
-        props.createData(initialData)
+        props.createData(data)
 
         dispatchRedux(toggleIsLoad())
 
-    },[dispatchRedux,props])
+    },[dispatchRedux,props, data])
 
     useEffect(() => {
         getData()
-    }, [ ])
+    }, [getData ])
 
     props.syncData.forEach((x: CardsDataDTO)=>{
         x.oldTitle = x.title;
