@@ -15,9 +15,6 @@ export interface ReducerState {
 
 export type Action =
     | { type: 'DATA/CREATE_DATA', data: CardsDataDTO[] }
-    | { type: 'SHOW_IS_EDIT' }
-    | { type: 'HIDE_IS_EDIT'}
-    | { type: 'SHOW_LOAD' }
-    | { type: 'HIDE_LOAD' }
-    | { type: 'SHOW_OPEN' }
-    | { type: 'HIDE_OPEN' }
+    | { type: 'IS_EDIT' }
+    | { type: 'IS_LOAD' }
+    | { type: 'TOGGLE_MODAL' }

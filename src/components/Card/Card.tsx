@@ -1,5 +1,5 @@
 import { connect, useDispatch, useSelector } from "react-redux";
-import { showIsEdit, hideEdit, createData } from "../../states/redux/actions";
+import { createData, toggleIsEdit } from "../../states/redux/actions";
 import { CardsDataDTO } from "../../TStypes";
 import "./Card.scss";
 
@@ -10,14 +10,12 @@ const Card = (props: any) => {
     let isEdit = loading.data.isEdit
 
     const editCardHandler = () => {
-        dispatch(showIsEdit())
-        //dispatch({type: 'EDIT'})
+        dispatch(toggleIsEdit())
     };
 
     const removeCardHandler = (id: string) => {
         let filteredData = props.syncData.filter((el: CardsDataDTO) => el.id !== id);
         props.createData(filteredData)
-       // dispatch({type: 'ADD_DATA', data: filteredData})
     };
 
     const titleChangeHandler = (event: React.ChangeEvent<HTMLInputElement>) => {
@@ -44,9 +42,8 @@ const Card = (props: any) => {
             x.oldTitle = x.title;
             x.oldDescription = x.body;
         })
-        dispatch(hideEdit())
-        //editCardHandler();
-    };
+        dispatch(toggleIsEdit())
+   };
 
     const closeEditHandler = (event: { preventDefault: () => void; }) => {
         event.preventDefault();
@@ -54,8 +51,7 @@ const Card = (props: any) => {
             x.title = x.oldTitle;
             x.body = x.oldDescription;
         })
-        dispatch(hideEdit())
-                //editCardHandler();
+        dispatch(toggleIsEdit())
     };
 
     return (

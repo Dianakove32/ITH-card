@@ -8,7 +8,7 @@ import Modal from "../Modal/Modal";
 import Navigation from '../Navigation/Navigation';
 import { Link } from "react-router-dom";
 import {connect, useDispatch, useSelector} from 'react-redux'
-import { createData, hideLoad, hideOpen,  showLoad, showOpen  } from "../../states/redux/actions";
+import { createData, toggleIsLoad, toggleIsOpen } from "../../states/redux/actions";
 import {initialData} from '../dataData'
 import { CardsDataDTO } from "../../TStypes";
 
@@ -19,11 +19,11 @@ const Cards = (props: any) => {
     let isOpen = loading.data.isOpen
 
 const getData = useCallback(()=>{
-        dispatchRedux(showLoad())
+        dispatchRedux(toggleIsLoad())
 
         props.createData(initialData)
 
-        dispatchRedux(hideLoad())
+        dispatchRedux(toggleIsLoad())
 
     },[dispatchRedux,props])
 
@@ -56,11 +56,7 @@ const getData = useCallback(()=>{
     };
 
     const toggleModal = () => {
-        if(isOpen){
-            dispatchRedux(hideOpen())
-        }else {
-            dispatchRedux(showOpen())
-        }
+        dispatchRedux(toggleIsOpen())
     };
 
     return (

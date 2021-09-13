@@ -1,5 +1,5 @@
 import { CardsDataDTO } from "../../TStypes";
-import { CREATE_DATA,  HIDE_IS_EDIT,  HIDE_LOAD,  HIDE_OPEN,  SHOW_IS_EDIT, SHOW_LOAD, SHOW_OPEN } from "./types";
+import { CREATE_DATA, IS_EDIT, IS_LOAD, TOGGLE_MODAL,   } from "./types";
 
 export function createData( data: CardsDataDTO[]){
     return{
@@ -8,39 +8,22 @@ export function createData( data: CardsDataDTO[]){
     }
 }
 
-export function showIsEdit(){
+export function toggleIsEdit(){
     return{
-        type: SHOW_IS_EDIT,
+        type: IS_EDIT,
+    }
+}
+
+export function toggleIsLoad( ){
+    return{
+        type: IS_LOAD,
 
     }
 }
-export function hideEdit( ){
-    return{
-        type: HIDE_IS_EDIT,
 
-    }
-}
-export function showLoad( ){
+export function toggleIsOpen( ){
     return{
-        type: SHOW_LOAD,
-
-    }
-}
-export function hideLoad( ){
-    return{
-        type: HIDE_LOAD,
-
-    }
-}
-export function showOpen( ){
-    return{
-        type: SHOW_OPEN,
-
-    }
-}
-export function hideOpen( ){
-    return{
-        type: HIDE_OPEN,
+        type: TOGGLE_MODAL,
 
     }
 }
