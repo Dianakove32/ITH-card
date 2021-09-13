@@ -9,29 +9,43 @@ function CardDetails(props: any)  {
     const cardRef  = useRef() as MutableRefObject<HTMLDivElement> ;
     const [isEdit, setIsEdit] = useState(false);
 
-    const data = props.syncData.find((el: { id: string; })=> el.id === params.id)
-    data.oldTitle = data.title;
-    data.oldDescription = data.body;
+    let data: { oldTitle?: string; title: any; oldDescription?: any; body: any; id?: any; }
 
-useEffect(()=>{
-    cardRef.current.style.display='block'
-    setIsEdit(false)
-}, [data])
+    data = props.syncData.find((el: { id: string; })=> el.id === params.id)
+
+    if( data){
+        data.oldTitle = data.title;
+        data.oldDescription = data.body;
+    }else{
+        data = {
+            title: 'there is no card\'s information',
+            body:'choose another one'
+        }
+    }
+
+    useEffect(()=>{
+        setIsEdit(false)
+    }, [data])
 
     const editCardHandler = ( ) => {
         setIsEdit(!isEdit);
     };
 
     const titleChangeHandler = (event: React.ChangeEvent<HTMLInputElement>) => {
-        data.title = event.target.value;
+        if(data){
+            data.title = event.target.value;
+        }
+
     };
 
     const textChangeHandler = (event: React.ChangeEvent<HTMLTextAreaElement>) => {
         data.body = event.target.value
     };
 
-    const removeCardHandler = () => {
-        cardRef.current.style.display='none'
+    const removeCardHandler = (id: string) => {
+
+        let filteredData = props.syncData.filter((el: any) => el.id !== id);
+        props.createData(filteredData)
     };
 
     const saveCardHandler = (event: { preventDefault: () => void; }) => {
@@ -76,7 +90,7 @@ useEffect(()=>{
                 <span
                 id={data.id}
                 className="cross"
-                onClick={removeCardHandler}
+                onClick={()=>removeCardHandler(data.id)}
                 >
                 &#10060;
                 </span>
