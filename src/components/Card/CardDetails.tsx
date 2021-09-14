@@ -1,35 +1,51 @@
-import { useRef, useState, MutableRefObject, useEffect } from "react";
-import {  Link, useHistory } from "react-router-dom";
+import { connect } from "react-redux";
+import { useRef, useState, MutableRefObject, useEffect,  } from "react";
+import { Link, useParams } from "react-router-dom";
 import Navigation from "../Navigation/Navigation";
+import { createData } from "../../states/redux/actions";
 
-export default function CardDetails()  {
-    const history: any  = useHistory();
+function CardDetails(props: any)  {
+    const params: any  = useParams();
     const cardRef  = useRef() as MutableRefObject<HTMLDivElement> ;
     const [isEdit, setIsEdit] = useState(false);
 
-    const data = history.location.state.cardOne;
-    data.oldTitle = data.title;
-    data.oldDescription = data.body;
+    let data: { oldTitle?: string; title: any; oldDescription?: any; body: any; id?: any; }
 
-useEffect(()=>{
-    cardRef.current.style.display='block'
-    setIsEdit(false)
-}, [data])
+    data = props.syncData.find((el: { id: string; })=> el.id === params.id)
+
+    if( data){
+        data.oldTitle = data.title;
+        data.oldDescription = data.body;
+    }else{
+        data = {
+            title: 'there is no card\'s information',
+            body:'choose another one'
+        }
+    }
+
+    useEffect(()=>{
+        setIsEdit(false)
+    }, [data])
 
     const editCardHandler = ( ) => {
         setIsEdit(!isEdit);
     };
 
     const titleChangeHandler = (event: React.ChangeEvent<HTMLInputElement>) => {
-        data.title = event.target.value;
+        if(data){
+            data.title = event.target.value;
+        }
+
     };
 
     const textChangeHandler = (event: React.ChangeEvent<HTMLTextAreaElement>) => {
         data.body = event.target.value
     };
 
-    const removeCardHandler = () => {
-        cardRef.current.style.display='none'
+    const removeCardHandler = (id: string) => {
+
+        let filteredData = props.syncData.filter((el: any) => el.id !== id);
+        props.createData(filteredData)
     };
 
     const saveCardHandler = (event: { preventDefault: () => void; }) => {
@@ -40,7 +56,6 @@ useEffect(()=>{
         if (!arrTitle || !arrDesc ){
             return
         }
-
         data.oldTitle = data.title;
         data.oldDescription = data.body;
 
@@ -70,12 +85,12 @@ useEffect(()=>{
             {isEdit ? (
             <button className="btn-add" onClick={saveCardHandler}>Save</button> ) : null}
             <div className="cardContainer">
-                <div className="card" ref={cardRef}>
+                <div className="card"  id={data.id} ref={cardRef}>
             {isEdit ? (
                 <span
                 id={data.id}
                 className="cross"
-                onClick={removeCardHandler}
+                onClick={()=>removeCardHandler(data.id)}
                 >
                 &#10060;
                 </span>
@@ -107,3 +122,14 @@ useEffect(()=>{
         </div>
     );
 }
+const mapDispatchToProps=  {
+    createData,
+}
+
+const mapStateToProps = (state: any) => {
+    return {
+    syncData: state.data.data,
+}
+}
+
+export default connect(mapStateToProps, mapDispatchToProps) (CardDetails);

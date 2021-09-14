@@ -1,89 +1,36 @@
 import "./Cards.scss";
 import { v4 as uuidv4 } from "uuid";
 import Header from "../Header/Header";
-import { useEffect, useReducer } from "react";
+import { useCallback, useEffect } from "react";
 import Card from "./Card";
 import Modal from "../Modal/Modal";
-import axios from 'axios'
 import Navigation from '../Navigation/Navigation';
 import { Link } from "react-router-dom";
+import {connect, useDispatch, useSelector} from 'react-redux'
+import { createData, toggleIsLoad, toggleIsOpen } from "../../states/redux/actions";
+import { CardsDataDTO } from "../../TStypes";
 
-interface CardsDataDTO {
-    title: string;
-    oldTitle?: string;
-    body: string;
-    oldDescription?: string;
-    id: string ;
-}
+const Cards = (props: any) => {
+    const dispatchRedux = useDispatch()
+    const loading: any = useSelector(state=>state )
+    let isLoad = loading.data.isLoad
+    let isOpen = loading.data.isOpen
+    let data = loading.data.data
 
-interface ReducerState {
-    data:CardsDataDTO[],
-    isEdit: boolean,
-    isOpen: boolean,
-    isLoading: boolean,
-}
+const getData = useCallback(()=>{
+        dispatchRedux(toggleIsLoad())
 
-let initialReducerState: ReducerState = {
-    data:[],
-    isEdit: false,
-    isOpen: false,
-    isLoading: false,
-}
+        props.createData(data)
 
-type Action =
-    | { type: 'ADD_DATA', data: CardsDataDTO[] }
-    | { type: 'EDIT' }
-    | { type: 'LOAD'}
-    | { type: 'OPEN' }
+        dispatchRedux(toggleIsLoad())
 
-const stateReducer = (state: ReducerState, action: Action): any => {
-    if (action.type === 'ADD_DATA'){
-        return {...state, data: action.data, }
-    }
-    if (action.type === 'EDIT'){
-        return {
-            ...state,
-            isEdit: !state.isEdit
-        }
-    }
-    if (action.type === 'LOAD'){
-        return {
-            ...state,
-            isLoading: !state.isLoading
-        }
-    }
-    if (action.type === 'OPEN'){
-        return {
-            ...state,
-            isOpen: !state.isOpen
-        }
-    }
-    return stateReducer
-}
-
-let url = 'https://jsonplaceholder.typicode.com/posts'
-
-const Cards = () => {
-    const [reducerState, dispatch] = useReducer(stateReducer, initialReducerState)
-
+    },[dispatchRedux,props, data])
 
     useEffect(() => {
         getData()
-    }, [])
+    }, [getData ])
 
-    async function getData(){
-        dispatch({type: 'LOAD'})
-        const data = await axios.get(url)
-        let newData= data.data.map((el:CardsDataDTO) =>{
-            return {title: el.title,
-                    body: el.body,
-                    id: String(el.id),}
-        })
-        dispatch({type: 'ADD_DATA', data: newData})
-        dispatch({type: 'LOAD'})
-    }
-
-    reducerState.data.forEach((x: CardsDataDTO)=>{
+    props.syncData.forEach((x: CardsDataDTO)=>{
         x.oldTitle = x.title;
         x.oldDescription = x.body;
     })
@@ -94,33 +41,21 @@ const Cards = () => {
             body: text,
             id: uuidv4()
         }
-        let copyOfItem = [...reducerState.data]
+        let copyOfItem = [...props.syncData]
         copyOfItem.push(newData)
+        props.createData(copyOfItem)
 
-        dispatch({type: 'ADD_DATA', data: copyOfItem })
-
-        axios.post(url, {
-            method: 'POST',
-            headers: {
-                'Content-Type': 'application/json'
-            },
-            body: JSON.stringify(newData)
-        }).then(res=> console.log('status:', res.status))
-    };
-
-    const removeCardHandler = (id: string) => {
-        let filteredData = reducerState.data.filter((el: CardsDataDTO) => el.id !== id);
-
-        dispatch({type: 'ADD_DATA', data: filteredData})
-    };
-
-    const editCardHandler = ( ) => {
-
-        dispatch({type: 'EDIT'})
+        // axios.post(url, {
+        //     method: 'POST',
+        //     headers: {
+        //         'Content-Type': 'application/json'
+        //     },
+        //     body: JSON.stringify(newData)
+        // }).then(res=> console.log('status:', res.status))
     };
 
     const toggleModal = () => {
-        dispatch({type: 'OPEN'})
+        dispatchRedux(toggleIsOpen())
     };
 
     return (
@@ -128,20 +63,26 @@ const Cards = () => {
         <Link className="cards-link" to='/main'>MainPage</Link>
         <Navigation/>
         <Header />
-        <div className={reducerState.isOpen ? "backdrop" : ""} onClick={toggleModal}></div>
+        <div className={ isOpen ? "backdrop" : ""} onClick={toggleModal}></div>
         <div>
             <button className="btn-add" onClick={toggleModal}>Add Card</button>
         </div>
-        {reducerState.isOpen ? <Modal addCardHandler={addCardHandler} closeModal={toggleModal}/> : null}
-        {reducerState.isLoading ? <p>Loading...</p> : <Card
-            data={reducerState.data}
-            removeCardHandler={removeCardHandler}
-            editCardHandler={editCardHandler}
-            isEdit={reducerState.isEdit}
-        />}
+        { isOpen ? <Modal addCardHandler={addCardHandler} closeModal={toggleModal}/> : null}
+
+        {isLoad ? <p>Loading...</p> : <Card/>}
 
         </div>
     );
 };
 
-export default Cards;
+const mapStateToProps = (state: any) => {
+    return {
+        syncData: state.data.data,
+    }
+}
+
+const mapDispatchToProps=  {
+    createData,
+}
+
+export default connect(mapStateToProps, mapDispatchToProps) (Cards);
