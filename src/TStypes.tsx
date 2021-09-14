@@ -1,4 +1,3 @@
-
 export interface CardsDataDTO {
     title?: string;
     oldTitle?: string;
@@ -12,9 +11,3 @@ export interface ReducerState {
     isOpen: boolean,
     isLoad: boolean,
     }
-
-export type Action =
-    | { type: 'DATA/CREATE_DATA', data: CardsDataDTO[] }
-    | { type: 'IS_EDIT' }
-    | { type: 'IS_LOAD' }
-    | { type: 'TOGGLE_MODAL' }

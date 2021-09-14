@@ -1,5 +1,5 @@
-import { Action, ReducerState } from "../../TStypes"
-import { CREATE_DATA, IS_EDIT, IS_LOAD, TOGGLE_MODAL} from "./types"
+import {  ReducerState } from "../../TStypes"
+import { Action, CREATE_DATA, IS_EDIT, IS_LOAD, TOGGLE_MODAL} from "./types"
 import {initialData} from '../../components/dataData'
 
 const initialState:  ReducerState = {
