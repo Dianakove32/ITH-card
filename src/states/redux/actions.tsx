@@ -9,7 +9,7 @@ export function createData( data: CardsDataDTO[]){
 }
 
 
-let url = 'https://jsonplaceholder.typicode.com/posts?_limit=5'
+let url = 'https://jsonplaceholder.typicode.com/posts'
 export function fetchData(){
     return async (dispatch: (arg0: { type: string; payload: any; }) => void) => {
         const res = await fetch(url)
