@@ -7,6 +7,7 @@ export interface CardsDataDTO {
 }
 export interface ReducerState {
     data:CardsDataDTO[],
+    fetch_data:any[],
     isEdit: boolean,
     isOpen: boolean,
     isLoad: boolean,

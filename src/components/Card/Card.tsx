@@ -19,13 +19,15 @@ const Card = (props: any) => {
     };
 
     const titleChangeHandler = (event: React.ChangeEvent<HTMLInputElement>) => {
-        let item: CardsDataDTO = props.syncData.find((el: { id: string; })=>el.id===event.target.id)!
+        let id =  event.target.id
+        let item: CardsDataDTO = props.syncData.find((el: { id: string; })=>String(el.id)===id)!
 
         item.title = event.target.value;
     };
 
     const textChangeHandler = (event: React.ChangeEvent<HTMLTextAreaElement>) => {
-        let item: CardsDataDTO = props.syncData.find((el: { id: string; })=>el.id===event.target.id)!
+        let id =  event.target.id
+        let item: CardsDataDTO = props.syncData.find((el: { id: string; })=>String(el.id)=== id)!
 
         item.body = event.target.value
     };
