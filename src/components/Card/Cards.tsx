@@ -6,7 +6,7 @@ import { useCallback, useEffect, useState } from "react";
 import Card from "./Card";
 import Modal from "../Modal/Modal";
 import Navigation from '../Navigation/Navigation';
-import { Link } from "react-router-dom";
+import { Link, Route } from "react-router-dom";
 import {connect, useDispatch, useSelector} from 'react-redux'
 import { createData, fetchData, toggleIsLoad, toggleIsOpen } from "../../states/redux/actions";
 import { CardsDataDTO } from "../../TStypes";
@@ -70,7 +70,10 @@ const getData = useCallback(()=>{
 
     return (
         <div className="App">
-        <Link className="cards-link" to='/main'>MainPage</Link>
+            <Route>
+                <Link className="cards-link" to='/main'>MainPage</Link>
+            </Route>
+
         <Navigation/>
         <Header />
         <div className={ isOpen ? "backdrop" : ""} onClick={toggleModal}></div>
