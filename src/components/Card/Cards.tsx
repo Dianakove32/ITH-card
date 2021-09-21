@@ -1,32 +1,40 @@
+/* eslint-disable react-hooks/exhaustive-deps */
 import "./Cards.scss";
 import { v4 as uuidv4 } from "uuid";
 import Header from "../Header/Header";
-import { useCallback, useEffect } from "react";
+import { useCallback, useEffect, useState } from "react";
 import Card from "./Card";
 import Modal from "../Modal/Modal";
 import Navigation from '../Navigation/Navigation';
 import { Link } from "react-router-dom";
 import {connect, useDispatch, useSelector} from 'react-redux'
-import { createData, toggleIsLoad, toggleIsOpen } from "../../states/redux/actions";
+import { createData, fetchData, toggleIsLoad, toggleIsOpen } from "../../states/redux/actions";
 import { CardsDataDTO } from "../../TStypes";
 
 const Cards = (props: any) => {
+    let [dataFetch, setDataFetch]=useState([])
     const dispatchRedux = useDispatch()
     const loading: any = useSelector(state=>state )
     let isLoad = loading.data.isLoad
     let isOpen = loading.data.isOpen
     let data = loading.data.data
+    let fetch_data = loading.data.fetch_data
+
+    useEffect(() => {
+        props.fetchData()
+    }, [ ])
 
 const getData = useCallback(()=>{
         dispatchRedux(toggleIsLoad())
 
-        props.createData(data)
+        setDataFetch(fetch_data)
+        props.createData(dataFetch)
 
         dispatchRedux(toggleIsLoad())
-
-    },[dispatchRedux,props, data])
+    },[dispatchRedux, fetch_data, props, dataFetch])
 
     useEffect(() => {
+
         getData()
     }, [getData ])
 
@@ -35,15 +43,17 @@ const getData = useCallback(()=>{
         x.oldDescription = x.body;
     })
 
-    const addCardHandler = async(title: string, text: string) => {
+    const addCardHandler =  (title: string, text: string) => {
         let newData={
             title: title,
             body: text,
             id: uuidv4()
         }
-        let copyOfItem = [...props.syncData]
+
+        let copyOfItem = [...data]
         copyOfItem.push(newData)
         props.createData(copyOfItem)
+
 
         // axios.post(url, {
         //     method: 'POST',
@@ -78,11 +88,13 @@ const getData = useCallback(()=>{
 const mapStateToProps = (state: any) => {
     return {
         syncData: state.data.data,
+        asyncData: state.data.fetch_data,
     }
 }
 
 const mapDispatchToProps=  {
     createData,
+    fetchData,
 }
 
 export default connect(mapStateToProps, mapDispatchToProps) (Cards);

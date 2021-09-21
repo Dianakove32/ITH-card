@@ -11,7 +11,7 @@ function CardDetails(props: any)  {
 
     let data: { oldTitle?: string; title: any; oldDescription?: any; body: any; id?: any; }
 
-    data = props.syncData.find((el: { id: string; })=> el.id === params.id)
+    data = props.syncData.find((el: { id: string; })=> String(el.id) === params.id)
 
     if( data){
         data.oldTitle = data.title;
@@ -44,7 +44,7 @@ function CardDetails(props: any)  {
 
     const removeCardHandler = (id: string) => {
 
-        let filteredData = props.syncData.filter((el: any) => el.id !== id);
+        let filteredData = props.syncData.filter((el: any) => String(el.id) !== id);
         props.createData(filteredData)
     };
 
