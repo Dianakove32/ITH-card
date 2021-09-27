@@ -1,3 +1,4 @@
+/* eslint-disable jsx-a11y/no-redundant-roles */
 import React, { useState } from "react";
 import "./Modal.scss";
 
@@ -40,6 +41,7 @@ const Modal = (props: IPropsModal  ) => {
                 type="text"
                 defaultValue={enteredTitle}
                 onChange={titleChangeHandler}
+
                 />
                 <label htmlFor="textarea">Text</label>
                 <textarea
@@ -47,7 +49,7 @@ const Modal = (props: IPropsModal  ) => {
                 onChange={textChangeHandler}
                 defaultValue={enteredText}
                 />
-                <button className="btn-add" type="submit">Add </button>
+                <button role='button' className="btn-add" type="submit">Add </button>
             </form>
         </div>
     );

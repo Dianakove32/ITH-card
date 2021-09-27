@@ -1,10 +1,11 @@
-import { Link } from "react-router-dom";
+import { Link  } from "react-router-dom";
 import './MainPage.scss'
 
 const MainPage = () => {
     return (
         <div className="main-container">
-            <Link to="/cards" className='link'>CardsList</Link>
+              <Link to="/cards" className='link'>CardsList</Link>
+
         </div>
     );
 };
